@@ -12592,7 +12592,7 @@ SpazTwit.prototype.getLists = function(user, onSuccess, onFailure) {
 		'method':'GET'
 	};
 
-	var xhr = this._getTimeline(opts);
+	var xhr = this._callMethod(opts);
 };
 
 
