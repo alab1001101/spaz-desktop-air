@@ -220,18 +220,10 @@ var FriendsTimeline = function() {
 				*/
 				if ($timeline.find('div.timeline-entry[data-status-id='+dataItem.id+']').length<1) {
 					
-					// nl2br
-					dataItem.text = sch.nl2br(dataItem.text);
-					
 					// check if entry has been read
 					dataItem.SC_is_read = !!Spaz.DB.isRead(dataItem.id);
 					
 					sch.debug(i +' is ' + dataItem.SC_is_read);
-					
-					if (dataItem.SC_is_retweet) {
-						// nl2br
-						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-					}
 					
 					no_dupes.push(dataItem);
 					
@@ -412,14 +404,6 @@ var PublicTimeline = function(args) {
 				*/
 				if ($timeline.find('div.timeline-entry[data-status-id='+dataItem.id+']').length<1) {
 
-					// nl2br
-					dataItem.text = sch.nl2br(dataItem.text);
-					
-					if (dataItem.SC_is_retweet) {
-						// nl2br
-						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-					}
-
 					no_dupes.push(dataItem);
 					/*
 						Save to DB via JazzRecord
@@ -518,14 +502,6 @@ var FavoritesTimeline = function(args) {
 					only add if it doesn't already exist
 				*/
 				if ($timeline.find('div.timeline-entry[data-status-id='+dataItem.id+']').length<1) {
-
-					// nl2br
-					dataItem.text = sch.nl2br(dataItem.text);
-
-					if (dataItem.SC_is_retweet) {
-						// nl2br
-						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-					}
 
 					no_dupes.push(dataItem);
 					/*
@@ -627,14 +603,6 @@ var UserTimeline = function(args) {
 					only add if it doesn't already exist
 				*/
 				if ($timeline.find('div.timeline-entry[data-status-id='+dataItem.id+']').length<1) {
-					
-					// nl2br
-					dataItem.text = sch.nl2br(dataItem.text);
-					
-					if (dataItem.SC_is_retweet) {
-						// nl2br
-						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-					}
 					
 					no_dupes.push(dataItem);
 					/*
@@ -776,14 +744,6 @@ var UserlistsTimeline = function(args) {
 				*/
 				if ($timeline.find('div.timeline-entry[data-status-id='+status.id+']').length<1) {
 					sch.debug('div.timeline-entry[data-status-id='+status.id+'] does not exist… adding');
-					
-					// nl2br
-					status.text = sch.nl2br(status.text);
-					
-					if (status.SC_is_retweet) {
-						// nl2br
-						data[i].retweeted_status.text = sch.nl2br(data[i].retweeted_status.text);
-					}
 					
 					no_dupes.push(status);
 					/*
@@ -1042,15 +1002,6 @@ var SearchTimeline = function(args) {
 					only add if it doesn't already exist
 				*/
 				if ($timeline.find('div.timeline-entry[data-status-id='+dataItem.id+']').length<1) {
-					
-					// nl2br
-					dataItem.text = sch.nl2br(dataItem.text);
-					
-					if (dataItem.SC_is_retweet) {
-						// nl2br
-						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-					}
-					
 					// if (Spaz.Prefs.get('usemarkdown')) {
 					//	dataItem.text = md.makeHtml(dataItem.text);
 					//	dataItem.text = dataItem.text.replace(/href="([^"]+)"/gi, 'href="$1" title="Open link in a browser window" class="inline-link"');

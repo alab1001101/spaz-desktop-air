@@ -90,6 +90,7 @@ Spaz.Templates.timeline_entry = function(d) {
 		d.isSent = d.isSent;
 		d.text = d.retweeted_status.text;
 	}
+	d.text = sch.nl2br(d.text);
 	d.text = sch.makeClickable(d.text, SPAZ_MAKECLICKABLE_OPTS);
 	d.text = Emoticons.SimpleSmileys.convertEmoticons(d.text);
 	d.SC_thumbnail_urls = this.imgURL.getThumbsForUrls(d.text);
@@ -168,6 +169,7 @@ Spaz.Templates.timeline_entry = function(d) {
 Spaz.Templates.timeline_entry_dm = function(d) {
 	
 	d.isSent = (d.sender_screen_name.toLowerCase() === Spaz.Prefs.getUsername().toLowerCase());
+	d.text = sch.nl2br(d.text);
 	d.text = sch.makeClickable(d.text, SPAZ_MAKECLICKABLE_OPTS);
 	d.text = Emoticons.SimpleSmileys.convertEmoticons(d.text);
 	d.SC_thumbnail_urls = this.imgURL.getThumbsForUrls(d.text);
