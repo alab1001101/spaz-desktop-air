@@ -222,7 +222,6 @@ var FriendsTimeline = function() {
 			data = data.reverse();
 			var i, iMax,
 				no_dupes = [],
-				sui = new SpazImageURL(),
 				dataItem;
 
 			sch.dump(data);
@@ -242,9 +241,6 @@ var FriendsTimeline = function() {
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
 					
-					// add thumbnails
-					dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.text);
-					
 					// make clickable
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
 					
@@ -259,9 +255,6 @@ var FriendsTimeline = function() {
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// add thumbnails
-						dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.retweeted_status.text);
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
@@ -439,7 +432,6 @@ var PublicTimeline = function(args) {
 			data = data.reverse();
 			var i, iMax,
 				no_dupes = [],
-				sui = new SpazImageURL(),
 				dataItem; // "datum"?
 
 			for (i = 0, iMax = data.length; i < iMax; i++){
@@ -453,8 +445,6 @@ var PublicTimeline = function(args) {
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
 
-					dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.text);
-
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
 
 					// convert emoticons
@@ -463,9 +453,6 @@ var PublicTimeline = function(args) {
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// add thumbnails
-						dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.retweeted_status.text);
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
@@ -563,7 +550,6 @@ var FavoritesTimeline = function(args) {
 			data = data.reverse();
 			var i, iMax,
 				no_dupes = [],
-				sui = new SpazImageURL(),
 				dataItem;
 
 			for (i = 0, iMax = data.length; i < iMax; i++){
@@ -577,8 +563,6 @@ var FavoritesTimeline = function(args) {
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
 
-					dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.text);
-
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
 
 					// convert emoticons
@@ -587,9 +571,6 @@ var FavoritesTimeline = function(args) {
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// add thumbnails
-						dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.retweeted_status.text);
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
@@ -689,7 +670,6 @@ var UserTimeline = function(args) {
 			data = data.reverse();
 			var i, iMax,
 				no_dupes = [],
-				sui = new SpazImageURL(),
 				dataItem;
 			
 			for (i = 0, iMax = data.length; i < iMax; i++){
@@ -703,8 +683,6 @@ var UserTimeline = function(args) {
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
 					
-					dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.text);
-					
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
 					
 					// convert emoticons
@@ -713,9 +691,6 @@ var UserTimeline = function(args) {
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// add thumbnails
-						dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.retweeted_status.text);
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
@@ -854,8 +829,7 @@ var UserlistsTimeline = function(args) {
 			// data.statuses = data.statuses.reverse();
 			var no_dupes = [];
 			
-			var sui = new SpazImageURL(),
-				status;
+			var status;
 			
 			for (var i = 0, iMax = data.statuses.length; i < iMax; i++) {
 				status = data.statuses[i];
@@ -868,7 +842,6 @@ var UserlistsTimeline = function(args) {
 					
 					// nl2br
 					status.text = sch.nl2br(status.text);
-					status.SC_thumbnail_urls = sui.getThumbsForUrls(status.text);
 					status.text = sch.makeClickable(status.text, SPAZ_MAKECLICKABLE_OPTS);
 					
 					// convert emoticons
@@ -878,9 +851,6 @@ var UserlistsTimeline = function(args) {
 					if (status.SC_is_retweet) {
 						// nl2br
 						data[i].retweeted_status.text = sch.nl2br(data[i].retweeted_status.text);
-
-						// add thumbnails
-						status.SC_thumbnail_urls = sui.getThumbsForUrls(data[i].retweeted_status.text);
 
 						// make clickable
 						data[i].retweeted_status.text = sch.makeClickable(data[i].retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
@@ -1137,7 +1107,6 @@ var SearchTimeline = function(args) {
 			var i, iMax,
 				no_dupes = [],
 				md = new Showdown.converter(),
-				sui = new SpazImageURL(),
 				dataItem;
 			
 			for (i = 0, iMax = data.length; i < iMax; i++){
@@ -1151,8 +1120,6 @@ var SearchTimeline = function(args) {
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
 					
-					dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.text);
-					
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
 
 					// convert emoticons
@@ -1161,9 +1128,6 @@ var SearchTimeline = function(args) {
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// add thumbnails
-						dataItem.SC_thumbnail_urls = sui.getThumbsForUrls(dataItem.retweeted_status.text);
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);

@@ -18,6 +18,12 @@ Spaz.Tpl.parse =function(template, data) {
 if (!Spaz.Templates) Spaz.Templates = {};
 
 /**
+ * Img URL's
+ */
+Spaz.Templates.imgURL = new SpazImageURL();
+
+
+/**
  * ShortURL's
  */
 Spaz.Templates.shoURL = new SpazShortURL();
@@ -62,6 +68,7 @@ Spaz.Templates.timeline_entry = function(d) {
 		d.isSent = d.isSent;
 		d.text = d.retweeted_status.text;
 	}
+	d.SC_thumbnail_urls = this.imgURL.getThumbsForUrls(d.text);
 	var urls;
 	if (urls = this.shoURL.findExpandableURLs(d.text)) {
 		this.shoURL.expandURLs(urls, '#status-text-' + d.id);
@@ -137,6 +144,7 @@ Spaz.Templates.timeline_entry = function(d) {
 Spaz.Templates.timeline_entry_dm = function(d) {
 	
 	d.isSent = (d.sender_screen_name.toLowerCase() === Spaz.Prefs.getUsername().toLowerCase());
+	d.SC_thumbnail_urls = this.imgURL.getThumbsForUrls(d.text);
 	var urls;
 	if (urls = this.shoURL.findExpandableURLs(d.text)) {
 		this.shoURL.expandURLs(urls, '#status-text-' + d.id);
