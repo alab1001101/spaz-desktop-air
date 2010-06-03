@@ -350,10 +350,11 @@ Spaz.Prefs.changeMethods = {
 			return parseInt(value) < max ? parseInt(value) : max;
 		},
 		onSet: function(key, value) {
-			Spaz.Timelines.friends.twit.data[SPAZCORE_SECTION_HOME].lastid = 1;
-			Spaz.Timelines.friends.twit.data[SPAZCORE_SECTION_FRIENDS].lastid = 1;
-			var max = Spaz.Prefs.defaultPreferences[key + '-max'];
-			return parseInt(value) < max ? parseInt(value) : max;
+			var max   = Spaz.Prefs.defaultPreferences[key + '-max'],
+				value = parseInt(value) < max ? parseInt(value) : max;
+
+			Spaz.Timelines.friends.pager.changeCount(SPAZCORE_SECTION_HOME, value);
+			return value;
 		}
 	},
 	'timeline-direct-pager-count': {
@@ -373,9 +374,11 @@ Spaz.Prefs.changeMethods = {
 			return parseInt(value) < max ? parseInt(value) : max;
 		},
 		onSet: function(key, value) {
-			Spaz.Timelines.friends.twit.data[SPAZCORE_SECTION_DMS].lastid = 1;
-			var max = Spaz.Prefs.defaultPreferences[key + '-max'];
-			return parseInt(value) < max ? parseInt(value) : max;
+			var max   = Spaz.Prefs.defaultPreferences[key + '-max'],
+				value = parseInt(value) < max ? parseInt(value) : max;
+
+			Spaz.Timelines.friends.pager.changeCount(SPAZCORE_SECTION_DMS, value);
+			return value;
 		}
 	},
 	'timeline-replies-pager-count': {
@@ -395,9 +398,11 @@ Spaz.Prefs.changeMethods = {
 			return parseInt(value) < max ? parseInt(value) : max;
 		},
 		onSet: function(key, value) {
-			Spaz.Timelines.friends.twit.data[SPAZCORE_SECTION_REPLIES].lastid = 1;
-			var max = Spaz.Prefs.defaultPreferences[key + '-max'];
-			return parseInt(value) < max ? parseInt(value) : max;
+			var max   = Spaz.Prefs.defaultPreferences[key + '-max'],
+				value = parseInt(value) < max ? parseInt(value) : max;
+
+			Spaz.Timelines.friends.pager.changeCount(SPAZCORE_SECTION_REPLIES, value);
+			return value;
 		}
 	},
 	'timeline-user-pager-count': {

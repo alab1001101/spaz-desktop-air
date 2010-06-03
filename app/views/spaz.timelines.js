@@ -151,11 +151,80 @@ var FriendsTimeline = function() {
 		$timelineWrapper = $timeline.parent();
 	this.twit  = new SpazTwit();
 
-	var maxFT = {
-		'home': Spaz.Prefs.get('timeline-home-pager-count-max'),
-		'direct': Spaz.Prefs.get('timeline-direct-pager-count-max'),
-		'replies': Spaz.Prefs.get('timeline-replies-pager-count-max')
+	this.pager = {
+		'home_count':    Spaz.Prefs.get('timeline-home-pager-count'),
+		'dm_count':      Spaz.Prefs.get('timeline-direct-pager-count'),
+		'replies_count': Spaz.Prefs.get('timeline-replies-pager-count'),
+		'next_opts': null,
+		'back_opts': null
 	};
+
+	this.pager.getNextOpts = function() {
+		if (null === this.next_opts) {
+			return {
+				'home_count':    this.home_count,
+				'dm_count':      this.dm_count,
+				'replies_count': this.replies_count
+			};
+		}
+		this.back_opts = this.next_opts;
+		this.next_opts = null;
+		return this.back_opts;
+	};
+
+	this.pager.changeCount = function(section, value) {
+
+		if (thisFT.twit.data[SPAZCORE_SECTION_COMBINED].items.length) {
+
+			var name = (section === 'dms' ? 'dm' : section),
+				opts = this.getNextOpts();
+
+			if (value > opts[name + '_count']) {
+				opts[name + '_count']  = value - opts[name + '_count'];
+
+				opts[name + '_since']  = 1 - jQuery(
+					thisFT.getEntrySelector() +
+					(name === 'home'    ? ':not(.dm):not(.reply)' :
+					(name === 'dm'      ? '.dm' :
+					(name === 'replies' ? '.reply' : ''))))
+					.slice(-1).attr('data-status-id');
+				
+				opts[name + '_lastid'] = thisFT.twit.data[section].lastid;
+				thisFT.twit.data[section].max = opts[name + '_count'];
+			}
+			this[name + '_count'] = value;
+			thisFT.twit.data[SPAZCORE_SECTION_COMBINED].max = (this.home_count + this.dm_count + this.replies_count);
+
+			this.next_opts = opts;
+			this.back_opts = null;
+		}
+	};
+
+	this.pager.cleanUp = function() {
+
+		if (null === this.back_opts) {
+			return;
+		}
+		var dataTW = thisFT.twit.data,
+			back   = this.back_opts;
+
+		if (back.home_lastid) {
+			dataTW[SPAZCORE_SECTION_HOME].lastid = back.home_lastid;
+		}
+		if (back.dm_lastid) {
+			dataTW[SPAZCORE_SECTION_DMS].lastid = back.dm_lastid;
+		}
+		if (back.replies_lastid) {
+			dataTW[SPAZCORE_SECTION_REPLIES].lastid = back.replies_lastid;
+		}
+		dataTW[SPAZCORE_SECTION_HOME].max     = this.home_count;
+		dataTW[SPAZCORE_SECTION_DMS].max      = this.dm_count;
+		dataTW[SPAZCORE_SECTION_REPLIES].max  = this.replies_count;
+		dataTW[SPAZCORE_SECTION_COMBINED].max = (this.home_count + this.dm_count + this.replies_count);
+		this.back_opts = null;
+		thisFT.sortByAttribute('data-timestamp', 'data-status-id');
+	};
+
 
 	/*
 		set up the Friends timeline
@@ -169,7 +238,7 @@ var FriendsTimeline = function() {
 		'event_target' :document,
 		
 		'refresh_time':Spaz.Prefs.get('network-refreshinterval'),
-		'max_items': (maxFT.home + maxFT.direct + maxFT.replies),
+		'max_items': (this.pager.home_count + this.pager.dm_count + this.pager.replies_count),
 
 		'request_data': function() {
 			sch.dump('REQUESTING DATA FOR FRIENDS TIMELINE =====================');
@@ -177,17 +246,7 @@ var FriendsTimeline = function() {
 			var username = Spaz.Prefs.getUsername();
 			var password = Spaz.Prefs.getPassword();
 
-			var count = {
-				'home': Spaz.Prefs.get('timeline-home-pager-count'),
-				'direct': Spaz.Prefs.get('timeline-direct-pager-count'),
-				'replies': Spaz.Prefs.get('timeline-replies-pager-count')
-			};
-
-			var com_opts = {
-				'home_count': (count.home > maxFT.home ? maxFT.home : count.home),
-				'dm_count': (count.direct > maxFT.direct ? maxFT.direct : count.direct),
-				'replies_count': (count.replies > maxFT.replies ? maxFT.replies : count.replies)
-			};
+			var com_opts = thisFT.pager.getNextOpts();
 
 			thisFT.twit.setCredentials(username, password);
 			thisFT.twit.setBaseURLByService(Spaz.Prefs.getAccountType());
@@ -202,87 +261,30 @@ var FriendsTimeline = function() {
 			sch.dump('DATA_SUCCESS');
 			
 			data = data.reverse();
-			var i, iMax,
-				no_dupes = [],
-				dataItem;
-
 			sch.dump(data);
 			
-			for (i = 0, iMax = data.length; i < iMax; i++){
-				dataItem = data[i];
-				sch.dump(i);
-
-				if (dataItem.SC_is_retweet) {
-					dataItem.id = dataItem.retweeted_status.id;
-				}
-				/*
-					only add if it doesn't already exist
-				*/
-				if ($timeline.find('div.timeline-entry[data-status-id='+dataItem.id+']').length<1) {
-					
-					// check if entry has been read
-					dataItem.SC_is_read = !!Spaz.DB.isRead(dataItem.id);
-					
-					sch.debug(i +' is ' + dataItem.SC_is_read);
-					
-					no_dupes.push(dataItem);
-					
-					/*
-						Save to DB via JazzRecord
-					*/
-					TweetModel.saveTweet(dataItem);
-					
-				}
-				
-			}
-			
-
 			/*
 				Record old scroll position
 			*/
-			var $oldFirst, offset_before;
-			$oldFirst	  = $timeline.find('div.timeline-entry:first');
+			var $oldFirst = $timeline.find('div.timeline-entry:first'),
+				offset_before;
+
 			if ($oldFirst.length > 0) {
 			    offset_before = $oldFirst.offset().top;
 			}
 				
 
+			$timelineWrapper.children('.loading').hide();
+			
+			
 			/*
 				Add new items
 			*/
-			$timelineWrapper.children('.loading').hide();
-			
-			thisFT.timeline.addItems(no_dupes);
-
-			/*
-				sort timeline
-			*/
-			var before = new Date();
-			
-			// don't sort if we don't have anything new!
-			if (no_dupes.length > 0) {
-				// get first of new times
-				var new_first_time = no_dupes[0].SC_created_at_unixtime;
-				// get last of new times
-				var new_last_time  = no_dupes[no_dupes.length-1].SC_created_at_unixtime;
-				// get first of OLD times
-				var old_first_time = parseInt($oldFirst.attr('data-timestamp'), 10);
-				// sort if either first new or last new is OLDER than the first old
-				if (new_first_time < old_first_time || new_last_time < old_first_time) {
-					$('div.timeline-entry', $timeline).tsort({attr:'data-timestamp', place:'orig', order:'desc'});					
-				} else {
-					sch.error('Didn\'t resort…');
-				}
-
-			}
-			var after = new Date();
-			var total = new Date();
-			total.setTime(after.getTime() - before.getTime());
-			sch.error('Sorting took ' + total.getMilliseconds() + 'ms');				
-			
+			thisFT.timeline.addItems(data);
+			thisFT.pager.cleanUp();
 
 			sch.note('notify of new entries!');
-			Spaz.UI.notifyOfNewEntries(no_dupes);
+			Spaz.UI.notifyOfNewEntries(data);
 
 
 			/*
@@ -325,6 +327,8 @@ var FriendsTimeline = function() {
 			Spaz.UI.hideLoading();
 		},
 		'renderer': function(obj) {
+			TweetModel.saveTweet(obj);
+			obj.SC_is_read = !!Spaz.DB.isRead(obj.id);
 			if (obj.SC_is_dm) {
 				return Spaz.Tpl.parse('timeline_entry_dm', obj);
 			} else {
@@ -340,9 +344,9 @@ var FriendsTimeline = function() {
 	*/
 	this.timeline.removeExtraItems = function() {
 		var sel = $timeline.selector;
-		sch.removeExtraElements(sel + ' div.timeline-entry:not(.reply):not(.dm)', Spaz.Prefs.get('timeline-home-pager-count'));
-		sch.removeExtraElements(sel + ' div.timeline-entry.reply', Spaz.Prefs.get('timeline-replies-pager-count'));
-		sch.removeExtraElements(sel + ' div.timeline-entry.dm', Spaz.Prefs.get('timeline-direct-pager-count'));
+		sch.removeExtraElements(sel + ' div.timeline-entry:not(.reply):not(.dm)', thisFT.pager.home_count);
+		sch.removeExtraElements(sel + ' div.timeline-entry.reply', thisFT.pager.replies_count);
+		sch.removeExtraElements(sel + ' div.timeline-entry.dm', thisFT.pager.dm_count);
 	};
 };
 
