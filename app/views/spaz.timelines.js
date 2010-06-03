@@ -244,9 +244,6 @@ var FriendsTimeline = function() {
 					// make clickable
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
 					
-					// convert emoticons
-					dataItem.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.text);
-					
 					// check if entry has been read
 					dataItem.SC_is_read = !!Spaz.DB.isRead(dataItem.id);
 					
@@ -258,9 +255,6 @@ var FriendsTimeline = function() {
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
-
-						// convert emoticons
-						dataItem.retweeted_status.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.retweeted_status.text);
 					}
 					
 					no_dupes.push(dataItem);
@@ -446,9 +440,6 @@ var PublicTimeline = function(args) {
 					dataItem.text = sch.nl2br(dataItem.text);
 
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
-
-					// convert emoticons
-					dataItem.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.text);
 					
 					if (dataItem.SC_is_retweet) {
 						// nl2br
@@ -456,9 +447,6 @@ var PublicTimeline = function(args) {
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
-
-						// convert emoticons
-						dataItem.retweeted_status.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.retweeted_status.text);
 					}
 
 					no_dupes.push(dataItem);
@@ -565,18 +553,12 @@ var FavoritesTimeline = function(args) {
 
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
 
-					// convert emoticons
-					dataItem.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.text);
-
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
-
-						// convert emoticons
-						dataItem.retweeted_status.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.retweeted_status.text);
 					}
 
 					no_dupes.push(dataItem);
@@ -685,18 +667,12 @@ var UserTimeline = function(args) {
 					
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
 					
-					// convert emoticons
-					dataItem.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.text);
-					
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
-
-						// convert emoticons
-						dataItem.retweeted_status.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.retweeted_status.text);
 					}
 					
 					no_dupes.push(dataItem);
@@ -844,19 +820,12 @@ var UserlistsTimeline = function(args) {
 					status.text = sch.nl2br(status.text);
 					status.text = sch.makeClickable(status.text, SPAZ_MAKECLICKABLE_OPTS);
 					
-					// convert emoticons
-					data.statuses[i].text = Emoticons.SimpleSmileys.convertEmoticons(data.statuses[i].text);
-					status.text = Emoticons.SimpleSmileys.convertEmoticons(status.text);
-					
 					if (status.SC_is_retweet) {
 						// nl2br
 						data[i].retweeted_status.text = sch.nl2br(data[i].retweeted_status.text);
 
 						// make clickable
 						data[i].retweeted_status.text = sch.makeClickable(data[i].retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
-
-						// convert emoticons
-						data[i].retweeted_status.text = Emoticons.SimpleSmileys.convertEmoticons(data[i].retweeted_status.text);
 					}
 					
 					no_dupes.push(status);
@@ -1121,9 +1090,6 @@ var SearchTimeline = function(args) {
 					dataItem.text = sch.nl2br(dataItem.text);
 					
 					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
-
-					// convert emoticons
-					dataItem.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.text);
 					
 					if (dataItem.SC_is_retweet) {
 						// nl2br
@@ -1131,9 +1097,6 @@ var SearchTimeline = function(args) {
 
 						// make clickable
 						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
-
-						// convert emoticons
-						dataItem.retweeted_status.text = Emoticons.SimpleSmileys.convertEmoticons(dataItem.retweeted_status.text);
 					}
 					
 					// if (Spaz.Prefs.get('usemarkdown')) {

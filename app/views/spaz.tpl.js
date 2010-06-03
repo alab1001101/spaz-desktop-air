@@ -68,6 +68,7 @@ Spaz.Templates.timeline_entry = function(d) {
 		d.isSent = d.isSent;
 		d.text = d.retweeted_status.text;
 	}
+	d.text = Emoticons.SimpleSmileys.convertEmoticons(d.text);
 	d.SC_thumbnail_urls = this.imgURL.getThumbsForUrls(d.text);
 	var urls;
 	if (urls = this.shoURL.findExpandableURLs(d.text)) {
@@ -144,6 +145,7 @@ Spaz.Templates.timeline_entry = function(d) {
 Spaz.Templates.timeline_entry_dm = function(d) {
 	
 	d.isSent = (d.sender_screen_name.toLowerCase() === Spaz.Prefs.getUsername().toLowerCase());
+	d.text = Emoticons.SimpleSmileys.convertEmoticons(d.text);
 	d.SC_thumbnail_urls = this.imgURL.getThumbsForUrls(d.text);
 	var urls;
 	if (urls = this.shoURL.findExpandableURLs(d.text)) {
