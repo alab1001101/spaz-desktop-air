@@ -168,7 +168,6 @@ var FriendsTimeline = function() {
 		$timeline		 = $('#timeline-friends'),
 		$timelineWrapper = $timeline.parent();
 	this.twit  = new SpazTwit();
-	this.shurl = new SpazShortURL();
 
 	var maxFT = {
 		'home': Spaz.Prefs.get('timeline-home-pager-count-max'),
@@ -330,29 +329,6 @@ var FriendsTimeline = function() {
 			sch.note('notify of new entries!');
 			Spaz.UI.notifyOfNewEntries(no_dupes);
 
-			/*
-				expand URLs
-			*/
-			// var exp_urls = [];
-			// for (var i=0; i < no_dupes.length; i++) {
-			//	urls = thisFT.shurl.findExpandableURLs(no_dupes[i].text);
-			//	if (urls) {
-			//		exp_urls = exp_urls.concat(urls);
-			//	}
-			// };
-			// 
-			// thisFT.shurl.expandURLs(exp_urls, thisFT.timeline.container);
-
-			$('div.timeline-entry.new div.status-text', thisFT.timeline.container).each(function(i) {
-				var urls = thisFT.shurl.findExpandableURLs(this.innerHTML);
-				if (urls) {
-					sch.debug(urls);
-					sch.debug(this.innerHTML);
-					sch.listen(this, sc.events.newExpandURLSuccess, thisFT.expandURL);
-					thisFT.shurl.expandURLs(urls, this);
-				}
-			});
-
 
 			/*
 				set new scroll position
@@ -413,25 +389,6 @@ var FriendsTimeline = function() {
 		sch.removeExtraElements(sel + ' div.timeline-entry.reply', Spaz.Prefs.get('timeline-replies-pager-count'));
 		sch.removeExtraElements(sel + ' div.timeline-entry.dm', Spaz.Prefs.get('timeline-direct-pager-count'));
 	};
-
-	
-	/*
-		handler for URL expansion
-	*/
-	this.expandURL = function(e, data) {
-		
-		var el = e.target;
-		sch.unlisten(el, sc.events.newExpandURLSuccess, thisFT.expandURL);
-
-		sch.debug('expanding…');
-		sch.debug(data);
-		el.innerHTML = thisFT.shurl.replaceExpandableURL(el.innerHTML, data.shorturl, data.longurl);
-	};
-
-	/*
-		listener for URL expansion
-	*/
-	sch.listen(this.timeline.container, sc.events.newExpandURLSuccess, this.expandURL);
 };
 
 FriendsTimeline.prototype = new AppTimeline();

@@ -17,6 +17,21 @@ Spaz.Tpl.parse =function(template, data) {
 
 if (!Spaz.Templates) Spaz.Templates = {};
 
+/**
+ * ShortURL's
+ */
+Spaz.Templates.shoURL = new SpazShortURL();
+
+Spaz.Templates.expandURL = function(e, data) {
+	var el = e.target;
+	sch.debug('expanding…');
+	sch.debug(data);
+	el.innerHTML = Spaz.Templates.shoURL.replaceExpandableURL(el.innerHTML, data.shorturl, data.longurl);
+};
+
+sch.listen(document, sc.events.newExpandURLSuccess, Spaz.Templates.expandURL);
+
+
 Spaz.Templates.timeline_entry = function(d) {
 	d.isSent = (d.user.screen_name.toLowerCase() === Spaz.Prefs.getUsername().toLowerCase());
 	
@@ -46,6 +61,10 @@ Spaz.Templates.timeline_entry = function(d) {
 		d.in_reply_to_status_id = d.retweeted_status.in_reply_to_status_id;
 		d.isSent = d.isSent;
 		d.text = d.retweeted_status.text;
+	}
+	var urls;
+	if (urls = this.shoURL.findExpandableURLs(d.text)) {
+		this.shoURL.expandURLs(urls, '#status-text-' + d.id);
 	}
 	entryHTML += '"  data-status-id="'+d.id+'" data-user-screen_name="'+d.user.screen_name+'" data-user-id="'+d.user.id+'" data-timestamp="'+d.SC_created_at_unixtime+'">';
 	entryHTML += '	<div class="user" id="user-'+d.user.id+'" user-screen_name="'+d.user.screen_name+'">';
@@ -118,6 +137,10 @@ Spaz.Templates.timeline_entry = function(d) {
 Spaz.Templates.timeline_entry_dm = function(d) {
 	
 	d.isSent = (d.sender_screen_name.toLowerCase() === Spaz.Prefs.getUsername().toLowerCase());
+	var urls;
+	if (urls = this.shoURL.findExpandableURLs(d.text)) {
+		this.shoURL.expandURLs(urls, '#status-text-' + d.id);
+	}
 	
 	// sch.dump(sch.enJSON(d));
 
