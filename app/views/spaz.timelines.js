@@ -4,24 +4,6 @@ if (!Spaz.Timelines){ Spaz.Timelines = {}; }
 
 
 /**
- * options used for makeClickable calls 
- */
-var SPAZ_MAKECLICKABLE_OPTS = {
-	'autolink': {
-		'type'		:'both',
-		'extra_code':'',
-		'maxlen'	:100
-	},
-	'screenname': {
-		'tpl':'<span class="user-screen-name clickable" title="View user\'s profile" user-screen_name="#username#">@#username#</span>' // should contain macro '#username#'
-	},
-	'hashtag': {
-		'tpl':'<span class="hashtag clickable" title="Search for this hashtag" data-hashtag="#hashtag_enc#">##hashtag#</span>' // should contain macros '#hashtag#' and '#hashtag_enc#'
-	}
-};
-
-
-/**
  * The string prefix for a "not these" filter
  */
 var NEGATION_TOKEN = "not:";
@@ -241,9 +223,6 @@ var FriendsTimeline = function() {
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
 					
-					// make clickable
-					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
-					
 					// check if entry has been read
 					dataItem.SC_is_read = !!Spaz.DB.isRead(dataItem.id);
 					
@@ -252,9 +231,6 @@ var FriendsTimeline = function() {
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// make clickable
-						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
 					}
 					
 					no_dupes.push(dataItem);
@@ -438,15 +414,10 @@ var PublicTimeline = function(args) {
 
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
-
-					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
 					
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// make clickable
-						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
 					}
 
 					no_dupes.push(dataItem);
@@ -551,14 +522,9 @@ var FavoritesTimeline = function(args) {
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
 
-					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
-
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// make clickable
-						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
 					}
 
 					no_dupes.push(dataItem);
@@ -665,14 +631,9 @@ var UserTimeline = function(args) {
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
 					
-					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
-					
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// make clickable
-						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
 					}
 					
 					no_dupes.push(dataItem);
@@ -818,14 +779,10 @@ var UserlistsTimeline = function(args) {
 					
 					// nl2br
 					status.text = sch.nl2br(status.text);
-					status.text = sch.makeClickable(status.text, SPAZ_MAKECLICKABLE_OPTS);
 					
 					if (status.SC_is_retweet) {
 						// nl2br
 						data[i].retweeted_status.text = sch.nl2br(data[i].retweeted_status.text);
-
-						// make clickable
-						data[i].retweeted_status.text = sch.makeClickable(data[i].retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
 					}
 					
 					no_dupes.push(status);
@@ -1089,14 +1046,9 @@ var SearchTimeline = function(args) {
 					// nl2br
 					dataItem.text = sch.nl2br(dataItem.text);
 					
-					dataItem.text = sch.makeClickable(dataItem.text, SPAZ_MAKECLICKABLE_OPTS);
-					
 					if (dataItem.SC_is_retweet) {
 						// nl2br
 						dataItem.retweeted_status.text = sch.nl2br(dataItem.retweeted_status.text);
-
-						// make clickable
-						dataItem.retweeted_status.text = sch.makeClickable(dataItem.retweeted_status.text, SPAZ_MAKECLICKABLE_OPTS);
 					}
 					
 					// if (Spaz.Prefs.get('usemarkdown')) {

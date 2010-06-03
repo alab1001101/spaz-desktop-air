@@ -15,6 +15,28 @@ Spaz.Tpl.parse =function(template, data) {
 };
 
 
+/**
+ * options used for makeClickable calls 
+ */
+var SPAZ_MAKECLICKABLE_OPTS = {
+	'autolink': {
+		'type'		:'both',
+		'extra_code':'',
+		'maxlen'	:100
+	},
+	'screenname': {
+		'tpl':'<span class="user-screen-name clickable" ' +
+					'title="View user\'s profile" ' +
+					'user-screen_name="#username#">@#username#</span>' // should contain macro '#username#'
+	},
+	'hashtag': {
+		'tpl':'<span class="hashtag clickable" ' +
+					'title="Search for this hashtag" ' +
+					'data-hashtag="#hashtag_enc#">##hashtag#</span>' // should contain macros '#hashtag#' and '#hashtag_enc#'
+	}
+};
+
+
 if (!Spaz.Templates) Spaz.Templates = {};
 
 /**
@@ -68,6 +90,7 @@ Spaz.Templates.timeline_entry = function(d) {
 		d.isSent = d.isSent;
 		d.text = d.retweeted_status.text;
 	}
+	d.text = sch.makeClickable(d.text, SPAZ_MAKECLICKABLE_OPTS);
 	d.text = Emoticons.SimpleSmileys.convertEmoticons(d.text);
 	d.SC_thumbnail_urls = this.imgURL.getThumbsForUrls(d.text);
 	var urls;
@@ -145,6 +168,7 @@ Spaz.Templates.timeline_entry = function(d) {
 Spaz.Templates.timeline_entry_dm = function(d) {
 	
 	d.isSent = (d.sender_screen_name.toLowerCase() === Spaz.Prefs.getUsername().toLowerCase());
+	d.text = sch.makeClickable(d.text, SPAZ_MAKECLICKABLE_OPTS);
 	d.text = Emoticons.SimpleSmileys.convertEmoticons(d.text);
 	d.SC_thumbnail_urls = this.imgURL.getThumbsForUrls(d.text);
 	var urls;
