@@ -82,9 +82,12 @@ var TwUserModel = new JazzRecord.Model({
 		 * @return {integer} the user id
 		 */
 		findOrCreate: function(userobj) {
+			if (null === userobj) {
+				return; // jQuery seems to fire empty
+			}
 			var user_id;
 			
-			sch.error(userobj);
+			sch.dump('findOrCreate userobj:',userobj);
 			
 			user_id = this.userExistsId(userobj.id, true);
 			
