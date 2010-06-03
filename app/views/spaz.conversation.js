@@ -52,17 +52,12 @@ Spaz.Conversation = {
 				/*
 					prep for display
 				*/
-				var sui = new SpazImageURL();
 				/*
 					to ensure we don't accidentally double-encode some stuff, use SC_text_raw as our base value
 				*/
 				
 				sch.debug('prepping text:'+status_obj.SC_text_raw);
 				sch.debug('finished text:'+status_obj.text);
-				
-				status_obj.SC_thumbnail_urls = sui.getThumbsForUrls(status_obj.SC_text_raw);
-				status_obj.text = sc.helpers.makeClickable(status_obj.SC_text_raw, SPAZ_MAKECLICKABLE_OPTS);
-				status_obj.text = Emoticons.SimpleSmileys.convertEmoticons(status_obj.text);
 				
 				convo_array.push(status_obj);
 				added_ids.push(status_obj.twitter_id);
