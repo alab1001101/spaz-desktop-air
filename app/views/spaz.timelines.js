@@ -100,7 +100,7 @@ AppTimeline.prototype.markAsRead = function() {
 };
 
 AppTimeline.prototype.getEntrySelector = function() {
-	return this.getTimelineSelector()+' div.timeline-entry';
+	return this.getTimelineSelector() + ' ' + this.timeline.timeline_item_selector;
 };
 
 AppTimeline.prototype.getWrapperSelector = function() {
@@ -113,10 +113,11 @@ AppTimeline.prototype.getTimelineSelector = function() {
 
 AppTimeline.prototype.sortByAttribute = function(sortattr, idattr, sortfunc) {
 
-	var items = jQuery( this.getEntrySelector() ),
-		itemAttrs	= [],
-		itemsSorted = [],
-		sortedHTML	= '';
+	var itemSelector = this.getEntrySelector(),
+		items        = jQuery(itemSelector),
+		itemAttrs	 = [],
+		itemsSorted  = [],
+		sortedHTML	 = '';
 	sortfunc = sortfunc || function(a,b){return b.sortval - a.sortval;};
 
 	(function(){
@@ -137,7 +138,7 @@ AppTimeline.prototype.sortByAttribute = function(sortattr, idattr, sortfunc) {
 		var i, iMax, attrobj, selector, $item, itemHTML;
 		for (i = 0, iMax = itemAttrs.length; i < iMax; i++){
 			attrobj = itemAttrs[i];
-			selector = this.getEntrySelector()+"["+idattr+"=" + attrobj.id + "]";
+			selector = itemSelector+"["+idattr+"=" + attrobj.id + "]";
 			// sch.error(selector);
 			$item = jQuery(selector);
 			// sch.error($item.length);
@@ -147,7 +148,7 @@ AppTimeline.prototype.sortByAttribute = function(sortattr, idattr, sortfunc) {
 		}
 	})();
 	
-	sortedHTML = '<div>'+itemsSorted.join('')+'</div>';
+	sortedHTML = itemsSorted.join('');
 	
 	jQuery(this.getTimelineSelector()).html(sortedHTML);
 };
