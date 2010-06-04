@@ -275,6 +275,14 @@ var FriendsTimeline = function() {
 				
 
 			$timelineWrapper.children('.loading').hide();
+
+
+			/**
+				Prepare filter String of id's in form of :\d+:\d+:
+				to test against in the renderer function
+			 */
+			var regexIDs = /.*?d(ata-status-id=.)(\d+)(?:.(?!\1)|\n)*|$/g;
+			thisFT.filterIDs = $timeline.html().replace(regexIDs,':$2');
 			
 			
 			/*
@@ -327,6 +335,9 @@ var FriendsTimeline = function() {
 			Spaz.UI.hideLoading();
 		},
 		'renderer': function(obj) {
+			if (RegExp(':' + obj.id + ':').test(thisFT.filterIDs)) {
+				return '';
+			}
 			TweetModel.saveTweet(obj);
 			obj.SC_is_read = !!Spaz.DB.isRead(obj.id);
 			if (obj.SC_is_dm) {
