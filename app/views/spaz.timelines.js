@@ -291,8 +291,10 @@ var FriendsTimeline = function() {
 			thisFT.timeline.addItems(data);
 			thisFT.pager.cleanUp();
 
-			sch.note('notify of new entries!');
-			Spaz.UI.notifyOfNewEntries(data);
+            if (data.length) {
+                sch.note('notify of new entries!');
+                Spaz.UI.notifyOfNewEntries(data);
+            }
 
 
 			/*
